@@ -9,7 +9,7 @@
 
 typedef enum
 {
-   GAIN = 0,
+   MIX = 0,
    INPUT = 1,
    OUTPUT = 2
 } PortIndex;
@@ -17,7 +17,7 @@ typedef enum
 typedef struct
 {
    // Port buffers
-   const float *gain;
+   const float *mix;
    const float *input;
    float *output;
 
@@ -41,8 +41,8 @@ static void connect_port(LV2_Handle instance, uint32_t port, void *data)
 
    switch ((PortIndex)port)
    {
-   case GAIN:
-      distortion->gain = (const float *)data;
+   case MIX:
+      distortion->mix = (const float *)data;
       break;
    case INPUT:
       distortion->input = (const float *)data;
@@ -67,16 +67,22 @@ static void run(LV2_Handle instance, uint32_t n_samples)
 
    float sample;
    float tempValue;
+   float mix = *distortion->mix;
    for (uint32_t pos = 0; pos < n_samples; pos++)
    {
       sample = input[pos];
 
+      //NOTE: Octaving by rectifying
       tempValue = fabs(sample);
+      
+      //NOTE: mixing with original value. This should not clip.
+      tempValue = tempValue * mix + sample * (1.0 - mix);
 
+      //NOTE: applying rolling average on octaved/mixed value
       distortion->rollingAverage -= distortion->rollingAverage / 2000.0;
       distortion->rollingAverage += (double)tempValue / (double) 2000.0;
 
-      output[pos] = (tempValue - distortion->rollingAverage) * 1.5;
+      output[pos] = (tempValue - distortion->rollingAverage);
    }
 }
 
