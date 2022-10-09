@@ -9,6 +9,11 @@ A potentially problematic DC offset is then removed by subtracting a rolling mov
 A gain of 1.5 partially restores the amplitude of the input after the rectification.
 After a silence a suden loud attack can thus lead to some audible clipping which could only be avoided by sacrifying amplitude.
 
+Note: When adding the octaved signal to the original signal the upper part of a "wave" of an input will overshoot whereas the lower part will get cancelled out partly. This leaves not a lot of headroom for the signal in a song mix since clipping might occur pretty soon. This cannot be avoided using the taken approach.
+
+A built in "mix" control for mixing the original signal to the output could avoid this by removing the DC offset after the mix.
+If this is a problem for your scenario I might implement that for you.
+
 Install
 ===
 Install the pre compiled artifacts from https://github.com/rominator1983/rectifyingOctave.lv2/releases
