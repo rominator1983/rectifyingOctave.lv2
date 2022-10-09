@@ -5,6 +5,8 @@ This [lv2 plugin](https://en.wikipedia.org/wiki/LV2) does a pure octave by inver
 
 It is similiar to what fuzz octave pedals try to do but accomplishes this in an idealized manner without simulating electronic components and of course without the fuzz.
 
+This is achieved without adding any notable latency as would be done by pedals using an FFT approach or similar.
+
 A potentially problematic DC offset is removed by subtracting a rolling moving average of 2000 samples.
 NOTE: The output of the pure octaved signal is a little quieter than the input. This has to be ammended by a compressor with a gain of up to 2.0. Sudden loud attacks will reach maximum output until the rolling average takes care of the DC part of the output again. So using only an amplifier would clip the output.
 
